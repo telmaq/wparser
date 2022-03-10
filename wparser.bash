@@ -1,11 +1,6 @@
 #!/bin/bash
 
-#Jiahao Zhao
-#Engineering Department
-#jiahao.zhao@mail.mcgill.ca
-####################################################################
-
-#4. extractData function
+#extractData function
 function extractData
 {
 #looping through all weather files found by find command and printing output
@@ -37,14 +32,12 @@ do
 	{print $1,$2,$3,$4,$9,$10,$11,$12,$13,$14,$15,$16,$17}'
 
 	echo ====================================
-#5. Producing observation summary
+#Producing observation summary
 	echo Observation Summary
 	echo Year,Month,Day,Hour,MaxTemp,MinTemp,MaxWS,MinWS
 	
 	grep observation $FILE | sed -e 's/data log flushed//g' -e 's/[][[[:space:]]*]//g' -e  's/-/ /1' -e 's/-/ /1'  -e 's/:/ /1' -e 's/:/ /1 '  -e 's/MISSED\ SYNC\ STEP/MISSEDSYNCSTEP/g' |
 #initialize max temp and windspeed and min temps and windspeed
-#I set max = large negative value to deal with "NOINF" and "MISSEDSYNCSTEP", as string is larger than integers?????
-#min works with a simple for loop despite the strings.
 
 	awk 'BEGIN {min=0;max=0;maxWS=0;minWS=0} {OFS=","}
         {$1=$1}
@@ -60,14 +53,14 @@ do
 done
 }
 
-#1. Checking for number of arguments script is invoked with
+#Checking for number of arguments script is invoked with
 if [[ $# -ne 1 ]] 
 then
 	echo Usage ./wparser.bash '<weatherdatadir>'
 	exit 1
 fi
 
-#2. If passed arg is not DIR, throw err msg -> code 1 -> stderr
+#If passed arg is not DIR, throw err msg -> code 1 -> stderr
 if [[ ! -d $1 ]] 
 then
 	echo Error! "$1" is not a valid directory name >&2
@@ -77,14 +70,9 @@ fi
 #list out only data FILES
 #ls -p $1 | grep -v '/$' | grep 'weather_info_*.data'
 
-#3 looking for data files under the given directory 
+#looking for data files under the given directory 
 fullPath=$(find $1 -name 'weather_info_*.data')
-#extract only the filename of the full path
-#fileName=$(basename -a  $fullPath)
-extractData
-
-
-#6. 
+extractData 
 
 
 #loop thru every file and extract the number of errors of each sensor
